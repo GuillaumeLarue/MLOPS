@@ -1,6 +1,11 @@
+import os
+import time
+import uuid
+
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, lit
+from pyspark.sql.functions import udf
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType, FloatType
 
 sc = SparkSession.builder \
@@ -8,6 +13,11 @@ sc = SparkSession.builder \
     .getOrCreate()
 
 sc.sparkContext.setLogLevel("ERROR")
+print(os.getcwd())
+# sc.sparkContext.addPyFile(os.getcwd() + "/../jars/spark-sql-kafka-0-10_2.12-3.3.1.jar")
+# sc.sparkContext.addPyFile(os.getcwd() + "/../jars/spark-cassandra-connector_2.12-3.2.0.jar")
+# spark-sql-kafka-0-10_2.12:3.3.1,com.datastax.spark:spark-cassandra-connector_2.12:3.2.0
+
 
 conf = SparkConf() \
     .set("spark.cassandra.connection.host", "localhost") \
@@ -19,6 +29,9 @@ spark = SparkSession.builder \
     .appName("ConsumerBatch") \
     .config(conf=conf) \
     .getOrCreate()
+
+# Grafana
+# http://localhost:3000/?orgId=1
 
 schema = StructType([
     StructField("id", StringType()),
@@ -38,8 +51,7 @@ df = spark \
 
 df = df.select(from_json(col("value").cast("string"), schema).alias("json_data"))
 # extract the columns from the JSON data
-import uuid
-from pyspark.sql.functions import udf
+
 
 df = df.select("json_data.*")
 
@@ -50,14 +62,18 @@ df = df.withColumnRenamed("temp", "value")
 df = df.withColumn("type", lit(str("temperature")[:10]))
 # df.printSchema()
 # uuid, sensor_id, time, type, value
-
-query = df.write \
-    .format("org.apache.spark.sql.cassandra") \
-    .mode("append") \
-    .option("keyspace", "mlops") \
-    .option("table", "logs") \
-    .option("interval", "30 seconds") \
-    .save()
+i = 0
+while True:
+    time.sleep(30)
+    query = df.write \
+        .format("org.apache.spark.sql.cassandra") \
+        .mode("append") \
+        .option("keyspace", "mlops") \
+        .option("table", "logs") \
+        .option("interval", "30 seconds") \
+        .save()
+    i += 1
+    print(f"{i} : Data saved")
 
 """
 def writeToCassandra(writeDF, epochId):

@@ -30,6 +30,9 @@ df = spark \
 df = df.select(from_json(col("value").cast("string"), schema).alias("json_data"))
 # extract the columns from the JSON data
 df = df.select("json_data.*")
+# Filter
+df = df.select("temp","time", "id").where("temp > 100")
+# df.printSchema()
 
 query = df.writeStream \
     .outputMode("append") \
@@ -40,7 +43,7 @@ query = df.writeStream \
 query.awaitTermination()
 
 # To run the script:
-# spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1 src/test.py
+# spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1 src/consumer-stream.py
 
 # Scala version : 2.12.17
 # Spark version : 3.3.1
