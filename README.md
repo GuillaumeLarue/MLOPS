@@ -2,7 +2,7 @@
 
 Sujet numéro 8 : génération et récolte de données avec Kafka
 
-## Project simulation
+## Détails du projet
 
 Dans une raffinerie, il y a des milliers de capteurs qui envoient des données toutes les minutes.
 Ainsi s'il y a une erreur, elle est très vite détecté.
@@ -18,11 +18,14 @@ Et pour finir il y aura une partie qui va permettre de faire des statistiques su
 Les messages seront générés aléatoirement.
 
 ## Technologies utilisées (TODO)
+- Kafka
+- Spark (PySpark)
+- Cassandra
+- Grafana
 
+## Schéma de l'architecture
 
-## Schéma de l'architecture (TODO)
-
-
+![Architecture](./data/archi.png)
 
 ## Authors :
 
