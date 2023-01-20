@@ -2,7 +2,7 @@ USE mlops;
 
 CREATE TABLE logs
 (
-    uuid       uuid PRIMARY KEY,
+    uuid      uuid PRIMARY KEY,
     sensor_id int,
     type      text,
     value     float,
