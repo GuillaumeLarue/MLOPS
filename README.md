@@ -25,6 +25,14 @@ Les messages seront générés aléatoirement.
 - Cassandra
 - Airflow (Le bonus)
 
+## Airflow
+
+![Airflow](./data/1.png)
+
+![Airflow](./data/2.png)
+
+![Airflow](./data/3.png)
+
 ## Schéma de l'architecture
 
 ![Architecture](./data/archi.png)
